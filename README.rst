@@ -16,8 +16,21 @@ async-download
 
 
 
-Uses coroutines to download files
+Uses coroutines to download urls
 
+Note: Greedy and built for speed. [10K cdn hosted urls; 0.5GB Total data; <5 minutes; M1 laptop]
+
+Usage
+-----
+```
+Usage: async_download [OPTIONS]
+
+Options:
+  --execute         required to do something
+  --urls-file PATH  urls to download  [required]
+  --data-dir PATH   directory to save downloads  [required]
+  --help            Show this message and exit.
+```
 
 * Free software: MIT license
 * Documentation: https://async-download.readthedocs.io.

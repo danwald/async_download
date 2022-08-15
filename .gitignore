@@ -105,3 +105,8 @@ ENV/
 .vscode/
 .idea/
 .*.swp
+
+# linters
+.flake8
+.isort.cfg
+.pre-commit-config.yaml

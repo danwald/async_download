@@ -10,9 +10,9 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=8', 'aiohttp>=3.8', 'tqdm>=4.64', 'pip>=22']
+requirements = ('Click>=8', 'aiohttp>=3.8', 'tqdm>=4.64', 'pip>=22',)
 
-test_requirements = []
+test_requirements = ('isort>=5.10', 'pre-commit>=2.20',)
 
 setup(
     author="danny crasto",

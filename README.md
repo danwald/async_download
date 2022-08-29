@@ -29,7 +29,7 @@ Options:
 Install & Run
 ------------
 
-- `pipx install async_download`
+- `pipx install async-download`
 - `async_download --help`
 
 Credits

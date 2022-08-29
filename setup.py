@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open('HISTORY.md') as history_file:
     history = history_file.read()
 
 requirements = ('Click>=8', 'aiohttp>=3.8', 'tqdm>=4.64', 'pip>=22',)
@@ -34,6 +34,7 @@ setup(
     },
     install_requires=requirements,
     license="MIT license",
+    long_description_content_type='text/markdown',
     long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords='async_download',
@@ -42,6 +43,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/danwald/async_download',
-    version='0.1.0',
+    version='1.0.0',
     zip_safe=False,
 )

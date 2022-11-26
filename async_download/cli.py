@@ -6,9 +6,10 @@ from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlparse
 
-import aiohttp
+import aiohttp  # type: ignore
 import click
 from tqdm import tqdm
+
 
 """taken from https://www.twilio.com/blog/asynchronous-http-requests-in-python-with-aiohttp"""
 
@@ -50,13 +51,27 @@ async def save_file(session, url, /, **kwargs) -> str:
         return f"Unknown error occurred processing  {url}. message:{e}"
 
 
-async def async_main(data_dir: str, urls: Iterator[str], execute: bool) -> None:
+async def heads(session, url) -> str:
+    try:
+        async with session.get(url, timeout=aiohttp.ClientTimeout(total=5)) as resp:
+            return f"{url} {resp.status}"
+    except aiohttp.ServerTimeoutError:
+        return f"{url}. 408"
+    except Exception as e:
+        return f"Unknown error occurred processing  {url}. message:{e}"
+
+
+async def async_main(
+    data_dir: str, urls: Iterator[str], execute: bool, validate: bool
+) -> None:
     tasks = []
     async with aiohttp.ClientSession(raise_for_status=True) as session:
         for url in tqdm(urls):
             tasks.append(
                 asyncio.ensure_future(
-                    save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
+                    heads(session, url)
+                    if validate
+                    else save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
                 )
             )
         responses = await asyncio.gather(*tasks, return_exceptions=True)
@@ -65,16 +80,25 @@ async def async_main(data_dir: str, urls: Iterator[str], execute: bool) -> None:
 
 
 @click.option(
-    "--data-dir", required=True, type=click.Path(exists=True), help="directory to save downloads"
+    "--data-dir",
+    required=True,
+    type=click.Path(exists=True),
+    help="directory to save downloads",
 )
 @click.option(
     "--urls-file", required=True, type=click.Path(exists=True), help="urls to download"
 )
 @click.option("--execute", is_flag=True, default=False, help="required to do something")
+@click.option(
+    "--validate",
+    is_flag=True,
+    default=False,
+    help="HEAD request validates urls returning https.status",
+)
 @click.command()
-def main(data_dir: str, urls_file: str, execute: bool) -> int:
+def main(data_dir: str, urls_file: str, execute: bool, validate: bool) -> int:
     start_time = time.time()
-    asyncio.run(async_main(data_dir, get_urls(urls_file), execute))
+    asyncio.run(async_main(data_dir, get_urls(urls_file), execute, validate))
     print("--- %s seconds ---" % (time.time() - start_time))
     return 0
 

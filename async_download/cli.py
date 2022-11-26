@@ -81,7 +81,7 @@ async def async_main(
 
 @click.option(
     "--data-dir",
-    required=True,
+    default=Path.cwd(),
     type=click.Path(exists=True),
     help="directory to save downloads",
 )

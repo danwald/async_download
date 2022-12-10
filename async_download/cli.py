@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 """taken from https://www.twilio.com/blog/asynchronous-http-requests-in-python-with-aiohttp"""
 
-EXEC = "execute"
-DATA_DIR = "dir"
+EXEC = 'execute'
+DATA_DIR = 'dir'
 
 
 def get_filepath(url: str, root_dir: str) -> Path:
@@ -24,14 +24,14 @@ def get_filepath(url: str, root_dir: str) -> Path:
 def get_urls(
     file_name: str,
 ) -> Iterator[str]:
-    with open(file_name, newline="") as csvfile:
+    with open(file_name, newline='') as csvfile:
         for url in csv.reader(csvfile):
             yield url[0]
 
 
 async def get_file(session, url, /, **kwargs) -> bytes:
     if not kwargs.get(EXEC):
-        return bytes(f"Downloading {url}", encoding="ascii")
+        return bytes(f'Downloading {url}', encoding='ascii')
     async with session.get(url) as resp:
         return await resp.read()
 
@@ -43,65 +43,66 @@ async def save_file(session, url, /, **kwargs) -> str:
         if kwargs.get(EXEC):
             file_path.parent.mkdir(parents=True, exist_ok=True)
             wrote_bytes = file_path.write_bytes(file_response)
-            return f"Downloaded {file_path}({wrote_bytes/1024} kb)"
-        return f"{url} -> {file_path}"
+            return f'Downloaded {file_path}({wrote_bytes/1024} kb)'
+        return f'{url} -> {file_path}'
     except aiohttp.ClientResponseError as ae:
-        return f"Failed to download {url}. status:{ae.status}, message:{ae.message}"
+        return f'Failed to download {url}. status:{ae.status}, message:{ae.message}'
     except Exception as e:
-        return f"Unknown error occurred processing  {url}. message:{e}"
+        return f'Unknown error occurred processing  {url}. message:{e}'
 
 
 async def heads(session, url) -> str:
     try:
         async with session.get(url, timeout=aiohttp.ClientTimeout(total=5)) as resp:
-            return f"{url} {resp.status}"
+            return f'{url} {resp.status}'
     except aiohttp.ServerTimeoutError:
-        return f"{url}. 408"
+        return f'{url}. 408'
     except Exception as e:
-        return f"Unknown error occurred processing  {url}. message:{e}"
+        return f'Unknown error occurred processing  {url}. message:{e}'
 
 
 async def async_main(
     data_dir: str, urls: Iterator[str], execute: bool, validate: bool
 ) -> None:
-    tasks = []
+    tasks = set()
     async with aiohttp.ClientSession(raise_for_status=True) as session:
-        for url in tqdm(urls):
-            tasks.append(
-                asyncio.ensure_future(
+        for total, url in enumerate(urls):
+            tasks.add(
+                asyncio.create_task(
                     heads(session, url)
                     if validate
                     else save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
                 )
             )
-        responses = await asyncio.gather(*tasks, return_exceptions=True)
-        for response in tqdm(responses):
-            print(response)
+        print(f'Processing {total} urls')
+        for result in tqdm(asyncio.as_completed(tasks), total=total):
+            response = await result
+            tqdm.write(response)
 
 
 @click.option(
-    "--data-dir",
+    '--data-dir',
     default=Path.cwd(),
     type=click.Path(exists=True),
-    help="directory to save downloads",
+    help='directory to save downloads',
 )
 @click.option(
-    "--urls-file", required=True, type=click.Path(exists=True), help="urls to download"
+    '--urls-file', required=True, type=click.Path(exists=True), help='urls to download'
 )
-@click.option("--execute", is_flag=True, default=False, help="required to do something")
+@click.option('--execute', is_flag=True, default=False, help='required to do something')
 @click.option(
-    "--validate",
+    '--validate',
     is_flag=True,
     default=False,
-    help="HEAD request validates urls returning https.status",
+    help='HEAD request validates urls returning https.status',
 )
 @click.command()
 def main(data_dir: str, urls_file: str, execute: bool, validate: bool) -> int:
     start_time = time.time()
     asyncio.run(async_main(data_dir, get_urls(urls_file), execute, validate))
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print('--- %s seconds ---' % (time.time() - start_time))
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())  # pragma: no cover

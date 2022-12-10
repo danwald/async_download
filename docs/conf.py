@@ -19,9 +19,11 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
 
 import async_download
+
+
+sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration ---------------------------------------------
 
@@ -47,8 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'async-download'
-copyright = "2022, danny crasto"
-author = "danny crasto"
+copyright = '2022, danny crasto'
+author = 'danny crasto'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

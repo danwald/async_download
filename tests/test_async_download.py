@@ -4,9 +4,9 @@
 
 
 import unittest
+
 from click.testing import CliRunner
 
-from async_download import async_download
 from async_download import cli
 
 

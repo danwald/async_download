@@ -15,8 +15,9 @@ with open('HISTORY.md') as history_file:
 requirements = (
     'Click>=8',
     'aiohttp>=3.8',
-    'tqdm>=4.64',
+    'more-itertools>=9.0.0',
     'pip>=22',
+    'tqdm>=4.64',
 )
 
 test_requirements = (
@@ -25,16 +26,16 @@ test_requirements = (
 )
 
 dev_requirements = (
-    'pip>=22.3.1',
-    'bump2version>=0.5.11',
-    'wheel>=0.33.6',
-    'watchdog>=0.9.0'
-    'flake8>=3.7.8',
-    'tox>=3.14.0'
-    'coverage>-4.5.4',
     'Sphinx>=1.8.5',
-    'twine>=1.14.0',
     'black>=21.7b0',
+    'bump2version>=0.5.11',
+    'coverage>-4.5.4',
+    'flake8>=3.7.8',
+    'pip>=22.3.1',
+    'tox>=3.14.0'
+    'twine>=1.14.0',
+    'watchdog>=0.9.0'
+    'wheel>=0.33.6',
 )
 
 

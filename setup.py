@@ -29,7 +29,7 @@ dev_requirements = (
     'Sphinx>=1.8.5',
     'black>=21.7b0',
     'bump2version>=0.5.11',
-    'coverage>-4.5.4',
+    'coverage>=4.5.4',
     'flake8>=3.7.8',
     'pip>=22.3.1',
     'tox>=3.14.0',

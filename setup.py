@@ -32,9 +32,9 @@ dev_requirements = (
     'coverage>-4.5.4',
     'flake8>=3.7.8',
     'pip>=22.3.1',
-    'tox>=3.14.0'
+    'tox>=3.14.0',
     'twine>=1.14.0',
-    'watchdog>=0.9.0'
+    'watchdog>=0.9.0',
     'wheel>=0.33.6',
 )
 

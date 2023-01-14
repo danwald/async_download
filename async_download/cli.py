@@ -24,7 +24,12 @@ def get_urls(
 ) -> Iterator[str]:
     with open(file_name, newline='') as csvfile:
         for url in csv.reader(csvfile):
-            yield url[0]
+            try:
+                yield url[0]
+            except Exception:
+                sys.stderr.write(
+                    f'\nError processing record "{url}" from "{file_name}"'
+                )
 
 
 async def get_file(session, url, /, **kwargs) -> bytes:

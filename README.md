@@ -27,10 +27,18 @@ Options:
 
 
 Install & Run
-------------
+-------------
+```bash
+pipx install async-download
+async_download --help
+```
 
-- `pipx install async-download`
-- `async_download --help`
+Development
+-----------
+```bash
+pip install -e .[dev]
+make test
+```
 
 Credits
 -------
@@ -39,3 +47,6 @@ This package was created with Cookiecutter and the `audreyr/cookiecutter-pypacka
 
 - [Cookiecutter](https://github.com/audreyr/cookiecutter)
 - [audreyr/cookiecutter-pypackage](https://github.com/audreyr/cookiecutter-pypackage)
+
+The main loop was taken from
+- [A Twilio tuitorial](https://www.twilio.com/blog/asynchronous-http-requests-in-python-with-aiohttp)

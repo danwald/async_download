@@ -6,12 +6,10 @@ from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlparse
 
-import aiohttp  # type: ignore
+import aiohttp
 import click
 from tqdm import tqdm
 
-
-"""taken from https://www.twilio.com/blog/asynchronous-http-requests-in-python-with-aiohttp"""
 
 EXEC = 'execute'
 DATA_DIR = 'dir'

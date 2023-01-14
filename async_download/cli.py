@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 import aiohttp
 import click
+from more_itertools import batched
 from tqdm import tqdm
 
 
@@ -65,22 +66,25 @@ async def heads(session, url) -> str:
 
 
 async def async_main(
-    data_dir: str, urls: Iterator[str], execute: bool, validate: bool
+        data_dir: str, urls: Iterator[str], execute: bool, validate: bool, batch_size: int
 ) -> None:
-    tasks = set()
     async with aiohttp.ClientSession(raise_for_status=True) as session:
-        for total, url in enumerate(urls):
-            tasks.add(
-                asyncio.create_task(
-                    heads(session, url)
-                    if validate
-                    else save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
+        total_urls = 0
+        for batch_count, batch in enumerate(batched(urls, batch_size), 1):
+            tasks = set()
+            for total, url in enumerate(batch, 1):
+                tasks.add(
+                    asyncio.create_task(
+                        heads(session, url)
+                        if validate
+                        else save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
+                    )
                 )
-            )
-        print(f'Processing {total} urls')
-        for result in tqdm(asyncio.as_completed(tasks), total=total):
-            response = await result
-            tqdm.write(response)
+            total_urls += total
+            for result in tqdm(asyncio.as_completed(tasks), total=total):
+                response = await result
+                tqdm.write(response)
+        tqdm.write(f'Processed {total_urls} urls within {batch_count} batches')
 
 
 @click.option(
@@ -99,11 +103,17 @@ async def async_main(
     default=False,
     help='HEAD request validates urls returning https.status',
 )
+@click.option(
+    '--batch-size',
+    type=int,
+    default=1000,
+    help='number of concurrent requests (default: 1000)',
+)
 @click.command()
-def main(data_dir: str, urls_file: str, execute: bool, validate: bool) -> int:
+def main(data_dir: str, urls_file: str, execute: bool, validate: bool, batch_size: int) -> int:
     start_time = time.time()
-    asyncio.run(async_main(data_dir, get_urls(urls_file), execute, validate))
-    print('--- %s seconds ---' % (time.time() - start_time))
+    asyncio.run(async_main(data_dir, get_urls(urls_file), execute, validate, batch_size))
+    print(f'Time: {(time.time() - start_time):.3f} secs')
     return 0
 
 

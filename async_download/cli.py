@@ -47,7 +47,7 @@ async def save_file(session, url, /, **kwargs) -> str:
         if kwargs.get(EXEC):
             file_path.parent.mkdir(parents=True, exist_ok=True)
             wrote_bytes = file_path.write_bytes(file_response)
-            return f'Downloaded {file_path}({wrote_bytes/1024:.2f} kb)'
+            return f'Downloaded {file_path}({(wrote_bytes/1024):.2f} kb)'
         return f'{url} -> {file_path}'
     except aiohttp.ClientResponseError as ae:
         return f'Failed to download {url}. status:{ae.status}, message:{ae.message}'

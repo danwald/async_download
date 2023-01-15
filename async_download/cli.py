@@ -6,12 +6,11 @@ from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlparse
 
-import aiohttp  # type: ignore
+import aiohttp
 import click
+from more_itertools import batched
 from tqdm import tqdm
 
-
-"""taken from https://www.twilio.com/blog/asynchronous-http-requests-in-python-with-aiohttp"""
 
 EXEC = 'execute'
 DATA_DIR = 'dir'
@@ -26,7 +25,12 @@ def get_urls(
 ) -> Iterator[str]:
     with open(file_name, newline='') as csvfile:
         for url in csv.reader(csvfile):
-            yield url[0]
+            try:
+                yield url[0]
+            except Exception:
+                sys.stderr.write(
+                    f'\nError processing record "{url}" from "{file_name}"'
+                )
 
 
 async def get_file(session, url, /, **kwargs) -> bytes:
@@ -43,7 +47,7 @@ async def save_file(session, url, /, **kwargs) -> str:
         if kwargs.get(EXEC):
             file_path.parent.mkdir(parents=True, exist_ok=True)
             wrote_bytes = file_path.write_bytes(file_response)
-            return f'Downloaded {file_path}({wrote_bytes/1024} kb)'
+            return f'Downloaded {file_path}({(wrote_bytes/1024):.2f} kb)'
         return f'{url} -> {file_path}'
     except aiohttp.ClientResponseError as ae:
         return f'Failed to download {url}. status:{ae.status}, message:{ae.message}'
@@ -62,22 +66,25 @@ async def heads(session, url) -> str:
 
 
 async def async_main(
-    data_dir: str, urls: Iterator[str], execute: bool, validate: bool
+        data_dir: str, urls: Iterator[str], execute: bool, validate: bool, batch_size: int
 ) -> None:
-    tasks = set()
     async with aiohttp.ClientSession(raise_for_status=True) as session:
-        for total, url in enumerate(urls):
-            tasks.add(
-                asyncio.create_task(
-                    heads(session, url)
-                    if validate
-                    else save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
+        total_urls = 0
+        for batch_count, batch in enumerate(batched(urls, batch_size), 1):
+            tasks = set()
+            for total, url in enumerate(batch, 1):
+                tasks.add(
+                    asyncio.create_task(
+                        heads(session, url)
+                        if validate
+                        else save_file(session, url, **{DATA_DIR: data_dir, EXEC: execute})
+                    )
                 )
-            )
-        print(f'Processing {total} urls')
-        for result in tqdm(asyncio.as_completed(tasks), total=total):
-            response = await result
-            tqdm.write(response)
+            total_urls += total
+            for result in tqdm(asyncio.as_completed(tasks), total=total):
+                response = await result
+                tqdm.write(response)
+        tqdm.write(f'Processed {total_urls} urls within {batch_count} batches')
 
 
 @click.option(
@@ -96,11 +103,17 @@ async def async_main(
     default=False,
     help='HEAD request validates urls returning https.status',
 )
+@click.option(
+    '--batch-size',
+    type=int,
+    default=1000,
+    help='number of concurrent requests (default: 1000)',
+)
 @click.command()
-def main(data_dir: str, urls_file: str, execute: bool, validate: bool) -> int:
+def main(data_dir: str, urls_file: str, execute: bool, validate: bool, batch_size: int) -> int:
     start_time = time.time()
-    asyncio.run(async_main(data_dir, get_urls(urls_file), execute, validate))
-    print('--- %s seconds ---' % (time.time() - start_time))
+    asyncio.run(async_main(data_dir, get_urls(urls_file), execute, validate, batch_size))
+    print(f'Time: {(time.time() - start_time):.3f} secs')
     return 0
 
 

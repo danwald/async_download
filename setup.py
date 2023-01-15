@@ -71,6 +71,6 @@ setup(
     tests_require=test_requirements,
     extras_require={'dev': dev_requirements},
     url='https://github.com/danwald/async_download',
-    version='1.2.0',
+    version='1.3.0',
     zip_safe=False,
 )

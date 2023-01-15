@@ -23,6 +23,7 @@ requirements = (
 test_requirements = (
     'isort>=5.10',
     'pre-commit>=2.20',
+    'pytest>=7.2.1',
 )
 
 dev_requirements = (

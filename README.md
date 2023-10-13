@@ -12,14 +12,20 @@ Usage
 -----
 
 ```
-Usage: async_download [OPTIONS]
+Usage: async_download [COMMAND] <OPTIONS>
+Commands:
+    headers - hit urls with the head request
+    download - download urls
 
-Options:
-  --execute         required to do something
-  --urls-file PATH  urls to download  [required]
-  --data-dir PATH   directory to save downloads  [required]
-  --help            Show this message and exit.
+`headers` Options:
+  --header TEXT         Headers to extract (default: Content-Length, Server)
+  --batch-size INTEGER  number of concurrent requests (default: 1000)
+  --help                Show this message and exit.
 
+`download` Options:
+  --batch-size INTEGER  number of concurrent requests (default: 1000)
+  --execute             required to do something
+  --help                Show this message and exit.
 ```
 
 * Free software: MIT license
@@ -36,7 +42,9 @@ async_download --help
 Development
 -----------
 ```bash
-pip install -e .[dev]
+python -mvenv .venv --prompt .
+. ./.venv/bin/activate
+pip install --editable .[testing]
 make test
 ```
 

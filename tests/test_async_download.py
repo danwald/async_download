@@ -5,27 +5,32 @@
 
 import unittest
 
-from click.testing import CliRunner
-
 from async_download import cli
+from click.testing import CliRunner
 
 
 class TestAsync_download(unittest.TestCase):
     """Tests for `async_download` package."""
 
     def setUp(self):
-        """Set up test fixtures, if any."""
+        self.runner = CliRunner()
 
     def tearDown(self):
-        """Tear down test fixtures, if any."""
+        pass
 
-    def test_000_something(self):
-        """Test something."""
-
-    def test_command_line_interface(self):
+    def test_main_command_line_interface(self):
         """Test the CLI."""
-        runner = CliRunner()
-        result = runner.invoke(cli.main)
+        result = self.runner.invoke(cli.main)
+        assert result.exit_code == 0
+
+    def test_headers_command(self):
+        result = self.runner.invoke(cli.main, ["headers"])
         assert result.exit_code != 0
-        help_result = runner.invoke(cli.main, ['--help'])
+        help_result = self.runner.invoke(cli.main, ["headers", "--help"])
+        assert help_result.exit_code == 0
+
+    def test_downalod_command(self):
+        result = self.runner.invoke(cli.main, ["download"])
+        assert result.exit_code != 0
+        help_result = self.runner.invoke(cli.main, ["download", "--help"])
         assert help_result.exit_code == 0

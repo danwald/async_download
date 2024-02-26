@@ -20,11 +20,7 @@ requirements = (
     "tqdm>=4.66.1",
 )
 
-test_requirements = (
-    "isort>=5.12.0",
-    "pre-commit>=3.4.0",
-    "pytest>=7.4.2",
-)
+test_requirements = ("pytest>=7.4.2",)
 
 dev_requirements = (
     "Sphinx>=1.8.5",
@@ -32,7 +28,9 @@ dev_requirements = (
     "bump2version>=1.0.1",
     "coverage>=7.3.2",
     "flake8>=6.1.0",
+    "isort>=5.12.0",
     "pip>=22.3.1",
+    "pre-commit>=3.4.0",
     "tox>=4.11.3",
     "twine>=4.0.2",
     "watchdog>=3.0.0",

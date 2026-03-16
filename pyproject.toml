@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "async_download"
+version = "1.4.0"
+description = "Uses coroutines to download files"
+readme = "README.md"
+license = { text = "MIT license" }
+authors = [{ name = "danny crasto", email = "danwald79@gmail.com" }]
+keywords = ["async_download"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "Click>=8.1.7",
+    "aiohttp>=3.8.6",
+    "more-itertools>=10.1.0",
+    "tqdm>=4.66.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "Sphinx>=1.8.5",
+    "black>=23.9.1",
+    "bump2version>=1.0.1",
+    "coverage>=7.3.2",
+    "flake8>=6.1.0",
+    "isort>=5.12.0",
+    "pre-commit>=3.4.0",
+    "tox>=4.11.3",
+    "twine>=4.0.2",
+    "watchdog>=3.0.0",
+    "wheel>=0.33.6",
+]
+testing = [
+    "pytest>=7.4.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/danwald/async_download"
+
+[project.scripts]
+async_download = "async_download.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["async_download", "async_download.*"]
+
+[tool.black]
+line-length = 120
+target-version = ["py310", "py311"]
+skip-string-normalization = true
+
+[tool.flake8]
+ignore = ["E501", "W293"]
+max-line-length = 120
+exclude = "tests/*"
+max-complexity = 10
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+
+[tool.isort]
+profile = "black"
+line_length = 120
+force_sort_within_sections = true
+src_paths = "src/fact"
+skip_gitignore = true
+lines_after_imports = 2
+multi_line_output = 6
+include_trailing_comma = true
+force_single_line = true
+not_skip = "__init__.py"
+
+[tool.coverage.run]
+branch = true

@@ -1,7 +1,7 @@
 Async download
 --------------
 
-![download](https://img.shields.io/pypi/v/async_download.svg "download") ![travis](https://img.shields.io/travis/danwald/async_download.svg) ![documentation status](https://readthedocs.org/projects/async-download/badge/?version=latest)
+![download](https://img.shields.io/pypi/v/async_download.svg "download") ![documentation status](https://readthedocs.org/projects/async-download/badge/?version=latest)
 
 
 Uses coroutines to download urls
@@ -35,17 +35,21 @@ Commands:
 Install & Run
 -------------
 ```bash
-pipx install async-download
+uv add async-download
+async_download --help
+```
+
+Or install directly with uv tool:
+```bash
+uv tool install async-download
 async_download --help
 ```
 
 Development
 -----------
 ```bash
-python -mvenv .venv --prompt .
-. ./.venv/bin/activate
-pip install --editable .[testing]
-make test
+uv sync
+uv run pytest
 ```
 
 Credits

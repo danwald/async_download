@@ -1,0 +1,72 @@
+[project]
+name = "async-download"
+version = "1.5.0"
+description = "Uses coroutines to download files"
+readme = "README.md"
+license = { text = "MIT license" }
+authors = [
+    { name = "danny crasto", email = "danwald79@gmail.com" }
+]
+keywords = ["async_download"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp",
+    "click",
+    "more-itertools",
+    "tqdm",
+]
+
+[project.scripts]
+async_download = "async_download.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/danwald/async_download"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 120
+target-version = ["py312"]
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+line_length = 120
+force_sort_within_sections = true
+skip_gitignore = true
+lines_after_imports = 2
+multi_line_output = 6
+include_trailing_comma = true
+force_single_line = true
+
+[tool.mypy]
+ignore_missing_imports = true
+strict = true
+
+[tool.coverage.run]
+branch = true
+
+[dependency-groups]
+dev = [
+    "black",
+    "coverage",
+    "flake8",
+    "isort",
+    "pre-commit",
+    "pytest",
+    "twine",
+    "watchdog",
+]

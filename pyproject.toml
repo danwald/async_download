@@ -18,10 +18,10 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "aiohttp>=3.13.3",
-    "click>=8.3.1",
-    "more-itertools>=10.8.0",
-    "tqdm>=4.67.3",
+    "aiohttp",
+    "click",
+    "more-itertools",
+    "tqdm",
 ]
 
 [project.scripts]
@@ -61,12 +61,12 @@ branch = true
 
 [dependency-groups]
 dev = [
-    "black>=26.3.1",
-    "coverage>=7.13.5",
-    "flake8>=7.3.0",
-    "isort>=8.0.1",
-    "pre-commit>=4.5.1",
-    "pytest>=9.0.2",
-    "twine>=6.2.0",
-    "watchdog>=6.0.0",
+    "black",
+    "coverage",
+    "flake8",
+    "isort",
+    "pre-commit",
+    "pytest",
+    "twine",
+    "watchdog",
 ]

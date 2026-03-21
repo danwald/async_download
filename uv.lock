@@ -134,22 +134,22 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aiohttp", specifier = ">=3.13.3" },
-    { name = "click", specifier = ">=8.3.1" },
-    { name = "more-itertools", specifier = ">=10.8.0" },
-    { name = "tqdm", specifier = ">=4.67.3" },
+    { name = "aiohttp" },
+    { name = "click" },
+    { name = "more-itertools" },
+    { name = "tqdm" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "black", specifier = ">=26.3.1" },
-    { name = "coverage", specifier = ">=7.13.5" },
-    { name = "flake8", specifier = ">=7.3.0" },
-    { name = "isort", specifier = ">=8.0.1" },
-    { name = "pre-commit", specifier = ">=4.5.1" },
-    { name = "pytest", specifier = ">=9.0.2" },
-    { name = "twine", specifier = ">=6.2.0" },
-    { name = "watchdog", specifier = ">=6.0.0" },
+    { name = "black" },
+    { name = "coverage" },
+    { name = "flake8" },
+    { name = "isort" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "twine" },
+    { name = "watchdog" },
 ]
 
 [[package]]

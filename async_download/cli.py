@@ -118,7 +118,7 @@ class Header(UrlProcessor):
             return f"Unknown error occurred processing  {url}. message:{e}"
 
 
-@click.group()  # type: ignore
+@click.group(invoke_without_command=True)  # type: ignore
 def main() -> int:
     return 0
 

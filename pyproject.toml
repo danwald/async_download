@@ -1,6 +1,6 @@
 [project]
 name = "async-download"
-version = "1.5.2"
+version = "1.5.3"
 description = "Uses coroutines to download files"
 readme = "README.md"
 license = { text = "MIT license" }
